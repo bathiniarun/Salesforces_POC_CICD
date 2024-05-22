@@ -4,5 +4,5 @@
     "**/bower_components": true,
     "**/.sfdx": true
   },
-  "vlocity.sfdxUsername": "vscodeOrg"
+  "vlocity.sfdxUsername": "kumar@sentara.sandbox"
 }

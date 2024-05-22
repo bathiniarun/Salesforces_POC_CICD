@@ -1,0 +1,36 @@
+name: Salesforce JWT Auth
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  authenticate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install -g sfdx-cli
+
+      - name: Create JWT key
+        run: |
+          openssl genrsa -out server.key 2048
+          openssl req -new -key server.key -out server.csr -subj "/CN=Salesforce"
+          openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+
+      - name: Set JWT Key Path
+        run: echo "JWT_KEY_PATH=/path/to/your/server.key" >> $GITHUB_ENV
+
+      - name: Authenticate with Salesforce using JWT
+        run: |
+          sfdx force:auth:jwt:grant --clientid PlatformCLI --jwtkeyfile $JWT_KEY_PATH --username kumar@sentara.sandbox --setdefaultdevhubusername --setalias vscodeOrg --instanceurl https://bermtecinc-dev-ed.develop.my.salesforce.com

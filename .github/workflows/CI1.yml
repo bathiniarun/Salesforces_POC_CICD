@@ -24,4 +24,4 @@ jobs:
 
       - name: Authenticate with Salesforce using JWT
         run: |
-          sfdx auth:jwt:grant --clientid PlatformCLI --jwtkeyfile server.key --username kumar@sentara.sandbox --setdefaultdevhubusername --instanceurl https://bermtecinc-dev-ed.develop.my.salesforce.com --setalias vscodeOrg
+          sfdx auth:jwt:grant --clientid 00Dak0000060p2mEAA --jwtkeyfile server.key --username kumar@sentara.sandbox --setdefaultdevhubusername --instanceurl https://bermtecinc-dev-ed.develop.my.salesforce.com --setalias vscodeOrg

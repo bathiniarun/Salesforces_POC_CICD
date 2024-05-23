@@ -1,0 +1,58 @@
+name: Install and Configure OpenSSL
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Update and upgrade apt-get
+      run: |
+        sudo apt-get update && sudo apt-get upgrade -y
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get install build-essential checkinstall zlib1g-dev -y
+
+    - name: Download OpenSSL
+      run: |
+        cd /usr/local/src/
+        wget https://www.openssl.org/source/openssl-1.1.1k.tar.gz
+        tar -xf openssl-1.1.1k.tar.gz
+
+    - name: Install and compile OpenSSL
+      run: |
+        cd /usr/local/src/openssl-1.1.1k
+        ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib
+        make
+        make test
+        sudo make install
+
+    - name: Configure link libraries
+      run: |
+        echo "/usr/local/ssl/lib" | sudo tee /etc/ld.so.conf.d/openssl-1.1.1k.conf
+        sudo ldconfig -v
+
+    - name: Backup the default openssl binary
+      run: |
+        sudo mv /usr/bin/c_rehash /usr/bin/c_rehash.BEKUP
+        sudo mv /usr/bin/openssl /usr/bin/openssl.BEKUP
+
+    - name: Update PATH environment variable
+      run: |
+        echo 'PATH="$PATH:/usr/local/ssl/bin"' | sudo tee -a /etc/environment
+        source /etc/environment
+
+    - name: Validate OpenSSL version
+      run: |
+        /usr/local/ssl/bin/openssl version -a

@@ -29,5 +29,4 @@ jobs:
           
       - name: Authenticate with Salesforce using JWT
         run: |
-          sf org login jwt --client-id "3MVG9JJwBBbcN47LEgZ0qpelDKkWHtFvYERVdIIXhanltbQR.ddHFT5cgDdEkdzfcHmyyO2R8unUAy_oOev8l" --jwt-key-file Salesforces_POC_CICD
-             /server.key --username kumar@sentara.sandbox
+          sf org login jwt --client-id "3MVG9JJwBBbcN47LEgZ0qpelDKkWHtFvYERVdIIXhanltbQR.ddHFT5cgDdEkdzfcHmyyO2R8unUAy_oOev8l" --jwt-key-file /path/to/Salesforces_POC_CICD --username kumar@sentara.sandbox

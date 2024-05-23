@@ -1,0 +1,32 @@
+name: CI Deploy to Dev Org
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          
+           # Install Salesforce CLI
+      - name: "Install Salesforce CLI"
+        run: |
+          wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
+          mkdir ~/sfdx
+          tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx --strip-components 1
+          echo "$HOME/sfdx/bin" >> $GITHUB_PATH
+          ~/sfdx/bin/sfdx version
+          
+      - name: Authenticate with Salesforce using JWT
+        run: |
+          sf org login jwt --client-id "3MVG9JJwBBbcN47LEgZ0qpelDKkWHtFvYERVdIIXhanltbQR.ddHFT5cgDdEkdzfcHmyyO2R8unUAy_oOev8l" --jwt-key-file server.key --username kumar@sentara.sandbox
